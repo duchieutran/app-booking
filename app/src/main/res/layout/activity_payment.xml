@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Tiêu đề -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Thanh toán đơn hàng"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:paddingBottom="12dp" />
+
+        <!-- Danh sách sản phẩm -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvProductList"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:paddingBottom="8dp" />
+
+        <!-- Thông tin thanh toán -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="8dp"
+            android:background="#f5f5f5">
+
+            <TextView
+                android:id="@+id/tvSubtotal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Tạm tính: 0 VND" />
+
+            <TextView
+                android:id="@+id/tvShippingFee"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Phí vận chuyển: 0 VND" />
+
+            <TextView
+                android:id="@+id/tvTotal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Tổng thanh toán: 0 VND"
+                android:textStyle="bold"
+                android:paddingTop="8dp" />
+        </LinearLayout>
+
+        <!-- Nút Thanh toán -->
+        <Button
+            android:id="@+id/btnPay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Thanh Toán"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="#FF5722"
+            android:textColor="#FFFFFF" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
