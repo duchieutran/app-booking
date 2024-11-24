@@ -1,76 +1,112 @@
 package com.example.appbooking;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.os.Build;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
-import android.view.WindowInsetsController;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+
+import com.example.appbooking.Activities.SignUpActivity;
 import com.example.appbooking.Database.MySQLite;
+import com.example.appbooking.page.Admin.HomeAdminActivity;
 import com.example.appbooking.page.DashboardActivity;
 import com.example.booking.Model.TaiKhoan;
 
+import org.mindrot.jbcrypt.BCrypt;
+
 public class MainActivity extends AppCompatActivity {
-    // khai báo tạm thời
-    EditText edtUsername, edtPassword;
-    Button btnLogIn;
+
+    EditText edtTenDangNhap, edtMatKhau;
+    Button btnDangNhap;
+    TextView txvDangKy;
     MySQLite db;
-    @SuppressLint("MissingInflatedId")
+    SharedPreferences sharedPreferences;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
 
-        /////////////////////// Test //////////////////////////////////////////////////////////
+        edtTenDangNhap = findViewById(R.id.edtTenDangNhap);
+        edtMatKhau = findViewById(R.id.edtMatKhau);
+        btnDangNhap = findViewById(R.id.btnDangNhap);
+        txvDangKy = findViewById(R.id.txvDangKy);
         db = new MySQLite(MainActivity.this, db.DATABASE_NAME, null, 1);
-        String kt = db.isTableExists("ksdfj") ? "t" : "f";
-        Toast.makeText(this, kt, Toast.LENGTH_SHORT).show();
-        edtUsername = findViewById(R.id.edtUsername);
-        edtPassword = findViewById(R.id.edtPassword);
-        btnLogIn = findViewById(R.id.btnLogIn);
-        btnLogIn.setOnClickListener(new View.OnClickListener() {
+
+        // Khởi tạo SharedPreferences
+        sharedPreferences = getSharedPreferences("app_preferences", MODE_PRIVATE);
+
+        btnDangNhap.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                String tenDangNhap = edtUsername.getText().toString().trim();
-                String matKhau = edtPassword.getText().toString().trim();
-                if (tenDangNhap.length() > 0 && matKhau.length() > 0) {
-                    TaiKhoan taiKhoan = db.kiemTraDangNhap(tenDangNhap, matKhau);
-                    String msg = taiKhoan.getRole() == 0 ? "dung" : "sai";
-//                    Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
-                    if (taiKhoan.getId() >= 0 && taiKhoan.getRole() >= 0) {
-                        if (taiKhoan.getRole() == 0) {
-                            Intent intentQuanTri = new Intent(MainActivity.this, DashboardActivity.class);
-                            intentQuanTri.putExtra("taiKhoan", taiKhoan);
-                            startActivity(intentQuanTri);
+            public void onClick(View view) {
+                String tenDangNhap = edtTenDangNhap.getText().toString().trim();
+                String matKhau = edtMatKhau.getText().toString().trim();
+
+                boolean isValid = true;
+                // Kiểm tra nếu tên đăng nhập trống
+                if (tenDangNhap.isEmpty()) {
+                    edtTenDangNhap.setError("Vui lòng điền đầy đủ tên đăng nhập!");
+                    isValid = false;
+                } else {
+                    edtTenDangNhap.setError(null);
+                }
+                // Kiểm tra nếu mật khẩu trống
+                if (matKhau.isEmpty()) {
+                    edtMatKhau.setError("Vui lòng điền đầy đủ mật khẩu!");
+                    isValid = false;
+                } else {
+                    edtMatKhau.setError(null);
+                }
+                // Thực hiện đăng nhập nếu đã điền đầy đủ thông tin
+                if (isValid) {
+                    // Kiểm tra tài khoản và mật khẩu trong SharedPreferences
+                    String storedUsername = sharedPreferences.getString("username", "");
+                    String storedPassword = sharedPreferences.getString("password", "");
+
+                    if (tenDangNhap.equals(storedUsername) && checkPassword(matKhau, storedPassword)) {
+                        // Kiểm tra vai trò người dùng
+                        TaiKhoan taiKhoan = new TaiKhoan();
+                        taiKhoan.setUsername(tenDangNhap);
+                        taiKhoan.setPassword(matKhau);
+                        taiKhoan.setRole(1);  // Ví dụ: role 1 là người dùng bình thường
+
+                        // Chuyển đến trang DashboardActivity
+                        Intent intent = new Intent(MainActivity.this, DashboardActivity.class);
+                        intent.putExtra("taiKhoan", taiKhoan);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        // Kiểm tra trong CSDL nếu không tìm thấy trong SharedPreferences
+                        TaiKhoan taiKhoan = db.kiemTraDangNhap(tenDangNhap, matKhau);
+                        if (taiKhoan.getId() >= 0) {
+                            // Tài khoản hợp lệ, chuyển sang trang tương ứng
+                            Intent intent = new Intent(MainActivity.this, DashboardActivity.class);
+                            intent.putExtra("taiKhoan", taiKhoan);
+                            startActivity(intent);
+                            finish();
+                        } else {
+                            // Nếu tài khoản hoặc mật khẩu không đúng, hiển thị lỗi
+                            edtTenDangNhap.setError("Tài khoản hoặc mật khẩu không đúng!");
+                            edtMatKhau.setError("Tài khoản hoặc mật khẩu không đúng!");
                         }
-                        if (taiKhoan.getRole() == 1) {
-                            Intent intentDatHang = new Intent(MainActivity.this, DashboardActivity.class);
-                            intentDatHang.putExtra("taiKhoan", taiKhoan);
-                            startActivity(intentDatHang);
-                        }
-                    } else Toast.makeText(MainActivity.this, "Tài khoản hoặc mật khẩu không đúng!", Toast.LENGTH_SHORT).show();
-                } else Toast.makeText(MainActivity.this, "Vui lòng nhập tài khoản và mật khẩu!", Toast.LENGTH_SHORT).show();
+                    }
+                }
             }
         });
 
+        // Sự kiện đăng ký
+        txvDangKy.setOnClickListener(v -> {
+            Intent intentDangKy = new Intent(MainActivity.this, SignUpActivity.class);
+            startActivity(intentDangKy);
+        });
+    }
 
-            /////////////////////// Test /////////////////////////////////////////////////////////
-
+    // Hàm kiểm tra mật khẩu (so sánh mật khẩu nhập vào với mật khẩu đã mã hóa trong SharedPreferences)
+    private boolean checkPassword(String enteredPassword, String storedHashedPassword) {
+        return BCrypt.checkpw(enteredPassword, storedHashedPassword);
     }
 }

@@ -288,4 +288,10 @@ class MySQLite(context: Context, dbName: String, cursorFactory: SQLiteDatabase.C
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {}
+//    fun insertDataTaiKhoan(trim: String, hashedPassword: String, trim1: String, trim2: String): Boolean {
+//
+//    }
+//    fun insertUser(trim: String, trim1: String, trim2: String, trim3: String): Boolean {
+//
+//    }
 }

@@ -2,11 +2,11 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background2"
-    tools:context=".MainActivity">
-
+    tools:context=".Activities.SignUpActivity">
     <!-- Logo -->
     <ImageView
         android:id="@+id/imgLogo"
@@ -65,28 +65,64 @@
             android:textColor="#ffffff"
             android:textColorHint="#cccccc"
             android:textSize="14sp" />
+        <EditText
+            android:id="@+id/edtNhapLaiMatKhau"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/edittext_background"
+            android:drawableStart="@drawable/password"
+            android:drawablePadding="12dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:hint="Nhập lại mật khẩu"
+            android:gravity="center_vertical"
+            android:inputType="textPassword"
+            android:textColor="#ffffff"
+            android:textColorHint="#cccccc"
+            android:textSize="14sp" />
+        <EditText
+            android:id="@+id/edtEmail"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/edittext_background"
+            android:drawableStart="@drawable/email"
+            android:drawablePadding="12dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:hint="Email"
+            android:gravity="center_vertical"
+            android:inputType="textPassword"
+            android:textColor="#ffffff"
+            android:textColorHint="#cccccc"
+            android:textSize="14sp" />
+        <EditText
+            android:id="@+id/edtSDT"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/edittext_background"
+            android:drawableStart="@drawable/sdt"
+            android:drawablePadding="12dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:hint="Số điện thoại"
+            android:gravity="center_vertical"
+            android:inputType="textPassword"
+            android:textColor="#ffffff"
+            android:textColorHint="#cccccc"
+            android:textSize="14sp" />
 
-        <!-- Nút Đăng nhập -->
+        <!-- Nút Đăng ký  -->
         <Button
-            android:id="@+id/btnDangNhap"
+            android:id="@+id/btnDangKy"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@drawable/login_btn_background"
-            android:text="Đăng nhập"
+            android:text="Đăng ký"
             android:textColor="#ffffff"
             android:textSize="16sp" />
-
-        <!-- Liên kết Đăng ký -->
-        <TextView
-            android:id="@+id/txvDangKy"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:gravity="center"
-            android:text="Bạn chưa có tài khoản? Đăng ký."
-            android:textStyle="italic"
-            android:textColor="#ffffff"
-            android:textSize="14sp" />
     </LinearLayout>
 
     <!-- Hình nền đáy -->
