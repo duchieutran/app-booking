@@ -26,10 +26,12 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
+
     kotlinOptions {
         jvmTarget = "17"
     }
@@ -37,7 +39,8 @@ android {
 
 dependencies {
     implementation(libs.appcompat)
-    implementation(libs.material)
+    implementation(libs.material) // Nếu đang sử dụng libs, đảm bảo đã có phiên bản đúng
+    implementation("com.google.android.material:material:1.7.0")  // Nếu không dùng libs, thêm vào như này
     implementation(libs.activity)
     implementation(libs.constraintlayout)
     implementation(libs.core.ktx)

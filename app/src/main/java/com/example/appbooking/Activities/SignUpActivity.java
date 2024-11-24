@@ -31,7 +31,6 @@ public class SignUpActivity extends AppCompatActivity {
 
         // Khởi tạo SharedPreferences
         sharedPreferences = getSharedPreferences("app_preferences", MODE_PRIVATE);
-
         btnDangKy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -46,7 +45,7 @@ public class SignUpActivity extends AppCompatActivity {
                     saveAccount(username, password, email, sdt);
 
                     // Hiển thị thông báo đăng ký thành công
-                    showSuccessDialog();
+                    showSuccessDialog(username, email, sdt);
                 }
             }
         });
@@ -90,7 +89,6 @@ public class SignUpActivity extends AppCompatActivity {
         return isValid;
     }
 
-    // Lưu tài khoản vào SharedPreferences
     private void saveAccount(String username, String password, String email, String sdt) {
         String hashedPassword = hashPassword(password);
 
@@ -99,25 +97,25 @@ public class SignUpActivity extends AppCompatActivity {
         editor.putString("password", hashedPassword);
         editor.putString("email", email);
         editor.putString("sdt", sdt);
-        editor.apply();  // Lưu thông tin vào SharedPreferences
+        editor.apply();
     }
 
-    // Mã hóa mật khẩu sử dụng BCrypt
     private String hashPassword(String password) {
         String salt = BCrypt.gensalt();
         return BCrypt.hashpw(password, salt);
     }
 
-    // Hiển thị hộp thoại đăng ký thành công và chuyển sang màn hình bổ sung thông tin cá nhân
-    private void showSuccessDialog() {
+    private void showSuccessDialog(String username, String email, String sdt) {
         AlertDialog.Builder builder = new AlertDialog.Builder(SignUpActivity.this);
         builder.setTitle("Đăng ký thành công!")
                 .setMessage("Bạn đã đăng ký tài khoản thành công! Hãy bổ sung thông tin cá nhân!")
                 .setPositiveButton("OK", (dialog, which) -> {
-                    // Sau khi nhấn OK, chuyển đến màn hình bổ sung thông tin cá nhân
                     Intent intent = new Intent(SignUpActivity.this, AddInfoUserActivity.class);
+                    intent.putExtra("username", username);
+                    intent.putExtra("email", email);
+                    intent.putExtra("sdt", sdt);
                     startActivity(intent);
-                    finish();  // Đóng màn hình đăng ký
+                    finish();
                 })
                 .setCancelable(false)
                 .show();
