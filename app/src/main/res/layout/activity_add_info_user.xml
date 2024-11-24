@@ -85,7 +85,6 @@
             android:paddingEnd="8dp"
             android:hint="Họ và tên"
             android:gravity="center_vertical"
-            android:inputType="textPassword"
             android:textColor="#ffffff"
             android:textColorHint="#cccccc"
             android:textSize="14sp" />
@@ -102,7 +101,6 @@
             android:paddingEnd="8dp"
             android:hint="Email"
             android:gravity="center_vertical"
-            android:inputType="textPassword"
             android:textColor="#ffffff"
             android:textColorHint="#cccccc"
             android:textSize="14sp" />
@@ -119,7 +117,6 @@
             android:paddingEnd="8dp"
             android:hint="Số điện thoại"
             android:gravity="center_vertical"
-            android:inputType="textPassword"
             android:textColor="#ffffff"
             android:textColorHint="#cccccc"
             android:textSize="14sp" />
@@ -136,7 +133,6 @@
             android:paddingEnd="8dp"
             android:hint="Địa chỉ"
             android:gravity="center_vertical"
-            android:inputType="textPassword"
             android:textColor="#ffffff"
             android:textColorHint="#cccccc"
             android:textSize="14sp" />

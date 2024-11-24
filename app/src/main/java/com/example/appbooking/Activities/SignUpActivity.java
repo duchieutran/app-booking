@@ -94,7 +94,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("username", username);
-        editor.putString("password", hashedPassword);
+        editor.putString("password", hashedPassword);  // Mật khẩu đã mã hóa
         editor.putString("email", email);
         editor.putString("sdt", sdt);
         editor.apply();
@@ -102,7 +102,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     private String hashPassword(String password) {
         String salt = BCrypt.gensalt();
-        return BCrypt.hashpw(password, salt);
+        return BCrypt.hashpw(password, salt);  // Mã hóa mật khẩu
     }
 
     private void showSuccessDialog(String username, String email, String sdt) {

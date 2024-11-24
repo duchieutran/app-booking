@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -26,6 +27,7 @@ public class AddInfoUserActivity extends AppCompatActivity {
 
     private ImageView imgAvatar;
     private EditText edtUsername, edtPassword, edtEmail, edtPhone;
+    private Button btnLuuThayDoi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,12 +40,16 @@ public class AddInfoUserActivity extends AppCompatActivity {
         edtPassword = findViewById(R.id.edtMatKhau);
         edtEmail = findViewById(R.id.edtEmail);
         edtPhone = findViewById(R.id.edtSDT);
+        btnLuuThayDoi = findViewById(R.id.btnLuuThayDoi);
 
         // Tải thông tin người dùng và hiển thị
         loadUserInfo();
 
         // Khi nhấn vào avatar, mở thư viện để chọn ảnh mới
         imgAvatar.setOnClickListener(v -> openGallery());
+
+        // Khi nhấn "Lưu", lưu thông tin thay đổi
+        btnLuuThayDoi.setOnClickListener(v -> saveUserInfo());
     }
 
     private void openGallery() {
@@ -78,25 +84,35 @@ public class AddInfoUserActivity extends AppCompatActivity {
     }
 
     private void loadUserInfo() {
-        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE);
-        String username = sharedPreferences.getString("username", "");
-        String password = sharedPreferences.getString("password", "");
-        String email = sharedPreferences.getString("email", "");
-        String phone = sharedPreferences.getString("phone", "");
-        String avatarUri = sharedPreferences.getString(KEY_AVATAR_URI, "");
+        // Lấy thông tin từ Intent
+        Intent intent = getIntent();
+        String username = intent.getStringExtra("username");
+        String password = intent.getStringExtra("password");
+        String email = intent.getStringExtra("email");
+        String phone = intent.getStringExtra("sdt");
 
         // Hiển thị thông tin người dùng
         edtUsername.setText(username);
-        edtPassword.setText(password); // Hiển thị mật khẩu trực tiếp
+        edtPassword.setText(password); // Hiển thị mật khẩu
         edtEmail.setText(email);
         edtPhone.setText(phone);
+    }
 
-        // Hiển thị avatar nếu có
-        if (!avatarUri.isEmpty()) {
-            Uri uri = Uri.parse(avatarUri);
-            imgAvatar.setImageURI(uri);
-        } else {
-            imgAvatar.setImageResource(R.mipmap.logo); // Ảnh mặc định
-        }
+    private void saveUserInfo() {
+        String username = edtUsername.getText().toString();
+        String password = edtPassword.getText().toString();
+        String email = edtEmail.getText().toString();
+        String phone = edtPhone.getText().toString();
+
+        // Lưu thông tin vào SharedPreferences
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("username", username);
+        editor.putString("password", password);
+        editor.putString("email", email);
+        editor.putString("phone", phone);
+        editor.apply();
+
+        Toast.makeText(AddInfoUserActivity.this, "Thông tin đã được lưu!", Toast.LENGTH_SHORT).show();
     }
 }
